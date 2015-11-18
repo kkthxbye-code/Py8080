@@ -8,13 +8,13 @@ class i8080(object):
     def load(self, filename):
         with open(filename, "rb") as f:
             data = f.read()
-            self._state.ram().write(0, list(ord(x) for x in data))
+            self._state.memory().write(0, list(ord(x) for x in data))
 
     def state(self):
         return self._state
 
     def next_instruction(self):
-        opcode = self._state.ram().read_byte(self._state.registers().ip())
+        opcode = self._state.memory().read_byte(self._state.registers().ip())
         instruction = Instruction(opcode)
         self._state.registers().increment_ip(instruction.length)
 

@@ -10,7 +10,7 @@ class State(object):
         self._registers = registers
         self._flags = flags
 
-    def ram(self):
+    def memory(self):
         return self._memory
 
     def stack(self):

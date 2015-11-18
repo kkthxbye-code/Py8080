@@ -15,12 +15,12 @@ class Flags(object):
         else:
             self._flags &= ~self.FLAG_SIGN
 
-    def set_zero(self, on=True):
-        if on:
+    def set_zero(self, value):
+        zero = value == 0
+        if zero:
             self._flags |= self.FLAG_ZERO
         else:
             self._flags &= ~self.FLAG_ZERO
-
 
     def set_acarry(self, on=True):
         if on:
@@ -29,14 +29,12 @@ class Flags(object):
             self._flags &= ~self.FLAG_ACARRY
 
     def set_parity(self, value):
-        self._flags |= not sum([value & (1<<i) > 0 for i in range(8)]) % 2
+        parity = not sum([value & (1<<i) > 0 for i in range(8)]) % 2
 
-        """
-        if on:
+        if parity:
             self._flags |= self.FLAG_PARITY
         else:
-            self._flags &= ~self.FLAG_PARITY"""
-
+            self._flags &= ~self.FLAG_PARITY
 
     def set_carry(self, on=True):
         if on:
