@@ -1,8 +1,8 @@
-from ram import Ram
+from memory import Memory
 
 class Stack(object):
     def __init__(self, size):
-        self._stack = Ram(size)
+        self._stack = Memory(size)
         self._sp = 0
 
     def push(self, word):

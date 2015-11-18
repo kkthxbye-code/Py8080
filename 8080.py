@@ -20,10 +20,11 @@ class i8080(object):
 
         instruction.operation(self._state)
 
-        self._state.dump_state()
+        #self._state.dump_state()
 
     def run(self):
         while True:
+            #raw_input()
             self.next_instruction()
 
 

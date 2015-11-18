@@ -1,4 +1,4 @@
-class Ram(object):
+class Memory(object):
     def __init__(self, size):
         self._ram = [0]*size
 

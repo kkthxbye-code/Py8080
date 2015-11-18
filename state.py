@@ -1,21 +1,26 @@
-from ram import Ram
+from memory import Memory
 from stack import Stack
 from registers import Registers
+from flags import Flags
 
 class State(object):
-    def __init__(self, ram=Ram(32*1024), stack=Stack(32*1024), registers=Registers()):
-        self._ram = ram
+    def __init__(self, memory=Memory(32*1024), stack=Stack(32*1024), registers=Registers(), flags=Flags()):
+        self._memory = memory
         self._stack = stack
         self._registers = registers
+        self._flags = flags
 
     def ram(self):
-        return self._ram
+        return self._memory
 
     def stack(self):
         return self._stack
 
     def registers(self):
         return self._registers
+
+    def flags(self):
+        return self._flags
 
     def dump_state(self):
         print "Instruction Pointer: {}".format(hex(self.registers().ip()))
@@ -24,3 +29,5 @@ class State(object):
         for idx, value in enumerate(self._registers.registers()):
             if value is not None:
                 print "Register {}: {}".format(idx, hex(value))
+
+        print "Flags {}".format(format(self.flags().flags(), '#010b'))

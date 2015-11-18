@@ -81,7 +81,6 @@ def mov_to_addr(state):
     state.ram().write_byte(address, value)
 
 def inx_w(state):
-    # TODO: FLAGS
     """
     :type state: State
     """
@@ -94,9 +93,8 @@ def inx_w(state):
 
     state.registers().set_register_word(dst, value)
 
-    state.dump_state()
 
-def dec(state):
+def dcr(state):
     # TODO: FLAGS
     """
     :type state: State
@@ -104,7 +102,35 @@ def dec(state):
     opcode = state.ram().read_byte(state.registers().ip()-1)
     dst = (opcode >> 3) & 0x07
 
-    value = state.registers().get_register_word(dst)
-    value -= 1
+    value = state.registers().get_register_byte(dst)
+    print value
+    value -= 2
+    print value
 
-    state.registers().set_register_byte(index, value)
+    overflow = value & (1 << (7)) != 0
+    state.flags().set_sign(overflow)
+    print overflow
+    if overflow:
+        value = abs(abs(value) - (1 << 8))
+
+    state.flags().set_parity(value)
+    state.flags().set_zero(value == 0)
+    state.flags().set_carry(value & 0x100)
+
+    state.registers().set_register_byte(dst, value)
+    print value
+
+    import sys
+    sys.exit()
+
+def jnz(state):
+    """
+    :type state: State
+    """
+    if not state.flags().get_zero():
+        address = state.ram().read_word(state.registers().ip()-2)
+        state.registers().move_ip(address)
+
+        #state.dump_state()
+
+
