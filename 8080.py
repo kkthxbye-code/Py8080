@@ -15,7 +15,16 @@ class i8080(object):
 
     def next_instruction(self):
         opcode = self._state.memory().read_byte(self._state.registers().ip())
-        instruction = Instruction(opcode)
+
+        try:
+            instruction = Instruction(opcode)
+        except NotImplementedError as e:
+            print e
+            self._state.dump_state()
+            print "n: {}".format(self.c)
+            import sys
+            sys.exit()
+
         self._state.registers().increment_ip(instruction.length)
 
         instruction.operation(self._state)
@@ -23,8 +32,12 @@ class i8080(object):
         #self._state.dump_state()
 
     def run(self):
+        self.c = 0
         while True:
+            self.c += 1
             #raw_input()
+            #if c > 1632:
+            #    raw_input()
             self.next_instruction()
 
 

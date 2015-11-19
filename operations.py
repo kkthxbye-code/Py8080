@@ -65,6 +65,17 @@ def call(state):
     state.registers().move_ip(address)
 
 
+def push(state):
+    """
+    :type state: State
+    """
+    opcode = state.memory().read_byte(state.registers().ip() - 1)
+    src = (opcode >> 4) & 3
+
+    address = state.registers().get_register_word(src)
+    state.stack().set_position(address)
+
+
 def ldax(state):
     """
     :type state: State
@@ -89,7 +100,6 @@ def mov(state):
     value = state.registers().get_register_byte(src)
 
     state.registers().set_register_byte(dst, value)
-    state.dump_state()
 
 def mov_to_addr(state):
     """
@@ -161,3 +171,23 @@ def ret(state):
     address = state.stack().pop()
     state.registers().move_ip(address)
 
+
+def cpi(state):
+    """
+    :type state: State
+    """
+    value = state.memory().read_byte(state.registers().ip() - 1)
+    dst = state.registers().get_register_by_name("a")
+    dst_value = state.registers().get_register_byte(dst)
+
+    temp = dst_value - value
+    temp = (temp & 0xff)
+
+    underflow = temp > value
+
+    state.flags().set_sign(underflow)
+    value = temp
+
+    state.flags().set_parity(value)
+    state.flags().set_zero(value)
+    state.flags().set_carry(value & 0x100)
