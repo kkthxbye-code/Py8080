@@ -16,6 +16,7 @@ class Instruction(object):
             0x1e: {"length": 2, "operation": mvi},
             0x23: {"length": 1, "operation": inx_w},
             0x26: {"length": 2, "operation": mvi},
+            0x29: {"length": 2, "operation": dad},
             0x36: {"length": 2, "operation": mvi_m},
             0xe5: {"length": 1, "operation": push},
             0x6f: {"length": 1, "operation": mov},

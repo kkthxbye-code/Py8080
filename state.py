@@ -30,4 +30,9 @@ class State(object):
             if value is not None:
                 print "Register {}: {}".format(idx, hex(value))
 
-        print "Flags {}".format(format(self.flags().flags(), '#010b'))
+        print "=======FLAGS========"
+        print "Zero: {}".format(int(self.flags().get_zero()))
+        print "Sign: {}".format(int(self.flags().get_sign()))
+        print "Parity: {}".format(int(self.flags().get_parity()))
+        print "Carry: {}".format(int(self.flags().get_carry()))
+        print "Half-Carry: {}".format(int(self.flags().get_acarry()))

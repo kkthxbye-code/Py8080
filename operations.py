@@ -34,6 +34,8 @@ def mvi_m(state):
     value = state.memory().read_byte(state.registers().ip() - 1)
 
     state.memory().write_byte(address, value)
+    #print "Wrote {} to {}".format(value, address)
+
 
 
 def lxi(state):
@@ -107,6 +109,7 @@ def mov_to_addr(state):
     """
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
+    #state.dump_state()
     dst = 2
     address = state.registers().get_register_word(dst)
 
@@ -114,6 +117,8 @@ def mov_to_addr(state):
     value = state.registers().get_register_byte(src)
 
     state.memory().write_byte(address, value)
+
+    #print "Wrote {} to {}".format(value, address)
 
 
 def inx_w(state):
@@ -126,6 +131,7 @@ def inx_w(state):
     value = state.registers().get_register_word(dst)
 
     value += 1
+    value &= 0xffff # Overflow
 
     state.registers().set_register_word(dst, value)
 
@@ -141,11 +147,14 @@ def dcr(state):
     value = state.registers().get_register_byte(dst)
 
     temp = value - 1
+    state.flags().set_acarry(value, temp) #TODO: This is broken
+
     temp = (temp & 0xff)
 
     underflow = temp > value
 
     state.flags().set_sign(underflow)
+
     value = temp
 
     state.flags().set_parity(value)
@@ -191,3 +200,22 @@ def cpi(state):
     state.flags().set_parity(value)
     state.flags().set_zero(value)
     state.flags().set_carry(value & 0x100)
+
+def dad(state):
+    """
+    :type state: State
+    """
+    opcode = state.memory().read_byte(state.registers().ip() - 1)
+    reg = (opcode >> 4) & 0x3
+
+    value = state.registers().get_register_word(reg)
+    res = value + value
+    state.flags().set_carry(res)
+
+    res = res & 0xffff
+
+    state.registers().set_register_word(reg, res)
+
+    state.dump_state()
+    import sys
+    sys.exit()
