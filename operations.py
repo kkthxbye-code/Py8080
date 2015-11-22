@@ -75,7 +75,17 @@ def push(state):
     src = (opcode >> 4) & 3
 
     address = state.registers().get_register_word(src)
-    state.stack().set_position(address)
+    state.stack().push(address)
+
+def pop(state):
+    """
+    :type state: State
+    """
+    opcode = state.memory().read_byte(state.registers().ip() - 1)
+    dst = (opcode >> 4) & 3
+
+    value = state.stack().pop()
+    state.registers().set_register_word(dst, value)
 
 
 def ldax(state):
@@ -120,6 +130,24 @@ def mov_to_addr(state):
 
     #print "Wrote {} to {}".format(value, address)
 
+def mov_from_addr(state):
+    """
+    :type state: State
+    """
+    opcode = state.memory().read_byte(state.registers().ip() - 1)
+
+    #state.dump_state()
+    dst = (opcode >> 3) & 0x7
+    print dst
+    src = 2
+
+    address = state.registers().get_register_word(src)
+    print address
+    value = state.memory().read_byte(address)
+
+    state.registers().set_register_byte(dst, value)
+
+    #print "Wrote {} to {}".format(value, address)
 
 def inx_w(state):
     """
@@ -209,13 +237,24 @@ def dad(state):
     reg = (opcode >> 4) & 0x3
 
     value = state.registers().get_register_word(reg)
-    res = value + value
-    state.flags().set_carry(res)
+    hl = state.registers().get_register_word(2)
+
+    res = hl + value
+    state.flags().set_carry(res, is_word=True)
 
     res = res & 0xffff
 
-    state.registers().set_register_word(reg, res)
+    state.registers().set_register_word(2, res)
 
-    state.dump_state()
-    import sys
-    sys.exit()
+def xchg(state):
+    """
+    :type state: State
+    """
+    de = state.registers().get_register_word(1)
+    hl = state.registers().get_register_word(2)
+
+    state.registers().set_register_word(1, hl)
+    state.registers().set_register_word(2, de)
+
+def out(state):
+    value = state.memory().read_byte(state.registers().ip() - 1)

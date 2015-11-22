@@ -23,9 +23,7 @@ class Flags(object):
             self._flags &= ~self.FLAG_ZERO
 
     def set_acarry(self, original, intermediate):
-        print "Original {}".format(original)
-        print "Intermediate {}".format(intermediate)
-        carry = (original & 0xf) > (intermediate & 0xf)
+        carry = ((1 ^ intermediate) ^ original) & 0x10
 
         if carry:
             self._flags |= self.FLAG_ACARRY
@@ -40,8 +38,11 @@ class Flags(object):
         else:
             self._flags &= ~self.FLAG_PARITY
 
-    def set_carry(self, res):
-        carry = res & 0x100 != 0
+    def set_carry(self, res, is_word=False):
+        if is_word:
+            carry = res > 0xffff
+        else:
+            carry = res > 0xff
 
         if carry:
             self._flags |= self.FLAG_CARRY

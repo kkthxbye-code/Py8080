@@ -14,6 +14,11 @@ class i8080(object):
         return self._state
 
     def next_instruction(self):
+        if self.c > 37391:
+            pass
+            #raw_input()
+            #self.state().dump_state()
+
         opcode = self._state.memory().read_byte(self._state.registers().ip())
 
         try:

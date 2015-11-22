@@ -26,9 +26,20 @@ class State(object):
         print "Instruction Pointer: {}".format(hex(self.registers().ip()))
         print "Stack Pointer: {}".format(hex(self.stack().position()))
 
+        """
         for idx, value in enumerate(self._registers.registers()):
             if value is not None:
                 print "Register {}: {}".format(idx, hex(value))
+        """
+        regs = self._registers.registers()
+        print "A: {}".format(regs[7])
+        print
+        print "B: {}".format(hex(regs[0]))
+        print "C: {}".format(hex(regs[1]))
+        print "D: {}".format(hex(regs[2]))
+        print "E: {}".format(hex(regs[3]))
+        print "H: {}".format(hex(regs[4]))
+        print "L: {}".format(hex(regs[5]))
 
         print "=======FLAGS========"
         print "Zero: {}".format(int(self.flags().get_zero()))
