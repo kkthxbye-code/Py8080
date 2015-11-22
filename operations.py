@@ -34,8 +34,6 @@ def mvi_m(state):
     value = state.memory().read_byte(state.registers().ip() - 1)
 
     state.memory().write_byte(address, value)
-    #print "Wrote {} to {}".format(value, address)
-
 
 
 def lxi(state):
@@ -119,7 +117,6 @@ def mov_to_addr(state):
     """
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
-    #state.dump_state()
     dst = 2
     address = state.registers().get_register_word(dst)
 
@@ -128,7 +125,6 @@ def mov_to_addr(state):
 
     state.memory().write_byte(address, value)
 
-    #print "Wrote {} to {}".format(value, address)
 
 def mov_from_addr(state):
     """
@@ -136,7 +132,6 @@ def mov_from_addr(state):
     """
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
-    #state.dump_state()
     dst = (opcode >> 3) & 0x7
     print dst
     src = 2
@@ -147,7 +142,6 @@ def mov_from_addr(state):
 
     state.registers().set_register_byte(dst, value)
 
-    #print "Wrote {} to {}".format(value, address)
 
 def inx_w(state):
     """
@@ -257,4 +251,5 @@ def xchg(state):
     state.registers().set_register_word(2, de)
 
 def out(state):
+    #TODO: Figure out what is needed regardning audio and shift registers
     value = state.memory().read_byte(state.registers().ip() - 1)
