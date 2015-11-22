@@ -50,5 +50,3 @@ class i8080(object):
 machine = i8080()
 machine.load("invaders")
 machine.run()
-
-#print machine.state().ram().read(0, 100)
