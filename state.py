@@ -23,14 +23,10 @@ class State(object):
         return self._flags
 
     def dump_state(self):
+        #TODO: Make this prettier/better
         print "Instruction Pointer: {}".format(hex(self.registers().ip()))
         print "Stack Pointer: {}".format(hex(self.stack().position()))
 
-        """
-        for idx, value in enumerate(self._registers.registers()):
-            if value is not None:
-                print "Register {}: {}".format(idx, hex(value))
-        """
         regs = self._registers.registers()
         print "A: {}".format(regs[7])
         print

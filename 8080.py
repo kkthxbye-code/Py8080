@@ -14,31 +14,17 @@ class i8080(object):
         return self._state
 
     def next_instruction(self):
-        if self.c > 37391:
-            pass
-            #raw_input()
-            #self.state().dump_state()
-
         opcode = self._state.memory().read_byte(self._state.registers().ip())
 
         try:
-            #print "n: {}".format(self.c)
             instruction = Instruction(opcode)
-
             self._state.registers().increment_ip(instruction.length)
-
             instruction.operation(self._state)
         except NotImplementedError as e:
             print self._state.flags().get_zero()
             print "n: {}".format(self.c)
             self._state.dump_state()
-            print e
-            import sys
-            sys.exit(0)
-
-
-
-        #self._state.dump_state()
+            raise NotImplementedError(e)
 
     def run(self):
         self.c = 0
