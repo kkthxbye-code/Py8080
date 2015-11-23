@@ -75,6 +75,19 @@ def push(state):
     address = state.registers().get_register_word(src)
     state.stack().push(address)
 
+
+def push_psw(state):
+    """
+    :type state: State
+    """
+    lower = state.registers().get_register_byte(7) #A
+    upper = state.flags().flags() #F
+    value = (upper << 8) | lower
+
+    state.stack().push(value)
+
+
+
 def pop(state):
     """
     :type state: State
