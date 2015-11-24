@@ -264,5 +264,15 @@ def xchg(state):
     state.registers().set_register_word(2, de)
 
 def out(state):
+    """
+    :type state: State
+    """
     #TODO: Figure out what is needed regardning audio and shift registers
     value = state.memory().read_byte(state.registers().ip() - 1)
+
+def rp(state):
+    """
+    :type state: State
+    """
+    if state.flags().get_parity():
+        ret(state)

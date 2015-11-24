@@ -45,6 +45,9 @@ class Instruction(object):
             0xe5: {"length": 1, "operation": push},
             0xeb: {"length": 1, "operation": xchg},
             0xfe: {"length": 2, "operation": cpi},
+            0xf5: {"length": 1, "operation": push_psw},
+            # 0xf0: {"length": 1, "operation": rp},
+
         }
 
         if opcode not in self._instructions:

@@ -28,8 +28,9 @@ class State(object):
         print "Stack Pointer: {}".format(hex(self.stack().position()))
 
         regs = self._registers.registers()
-        print "A: {}".format(regs[7])
-        print
+        print "A: {}".format(hex(regs[7]))
+        print "F: {}".format(hex(self.flags().flags()))
+
         print "B: {}".format(hex(regs[0]))
         print "C: {}".format(hex(regs[1]))
         print "D: {}".format(hex(regs[2]))
@@ -43,3 +44,5 @@ class State(object):
         print "Parity: {}".format(int(self.flags().get_parity()))
         print "Carry: {}".format(int(self.flags().get_carry()))
         print "Half-Carry: {}".format(int(self.flags().get_acarry()))
+
+        #print len(self.memory()._memory[0x2400:0x3fff])
