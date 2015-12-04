@@ -2,4 +2,4 @@
 
 Basic rendering, first output:
 
-[Rendering](http://imgur.com/mOwQLpD)
+![First game render](http://i.imgur.com/mOwQLpD.png)
