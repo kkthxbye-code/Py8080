@@ -46,6 +46,9 @@ class Instruction(object):
             0xeb: {"length": 1, "operation": xchg},
             0xfe: {"length": 2, "operation": cpi},
             0xf5: {"length": 1, "operation": push_psw},
+            0x0f: {"length": 1, "operation": rrc},
+            0xe6: {"length": 2, "operation": ani},
+            #0xc6: {"length": 1, "operation": rst}
             # 0xf0: {"length": 1, "operation": rp},
 
         }

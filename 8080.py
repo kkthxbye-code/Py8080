@@ -21,7 +21,6 @@ class i8080(object):
             self._state.registers().increment_ip(instruction.length)
             instruction.operation(self._state)
         except NotImplementedError as e:
-            print self._state.flags().get_zero()
             print "n: {}".format(self.c)
             self._state.dump_state()
             raise NotImplementedError(e)
@@ -31,6 +30,9 @@ class i8080(object):
         while True:
             self.c += 1
             self.next_instruction()
+
+            if self.c % 2000 == 0:
+                self.state().draw_screen()
 
 
 machine = i8080()

@@ -49,6 +49,12 @@ class Flags(object):
         else:
             self._flags &= ~self.FLAG_CARRY
 
+    def set_carry_raw(self, value):
+        if value:
+            self._flags |= self.FLAG_CARRY
+        else:
+            self._flags &= ~self.FLAG_CARRY
+
     def get_sign(self):
         return bool(self._flags & self.FLAG_SIGN)
 

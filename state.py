@@ -2,6 +2,8 @@ from memory import Memory
 from stack import Stack
 from registers import Registers
 from flags import Flags
+import pygame
+import random
 
 class State(object):
     def __init__(self, memory=Memory(32*1024), stack=Stack(32*1024), registers=Registers(), flags=Flags()):
@@ -9,6 +11,13 @@ class State(object):
         self._stack = stack
         self._registers = registers
         self._flags = flags
+
+        self.width = 224
+        self.height = 256
+
+        pygame.init()
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.clock = pygame.time.Clock()
 
     def memory(self):
         return self._memory
@@ -45,4 +54,25 @@ class State(object):
         print "Carry: {}".format(int(self.flags().get_carry()))
         print "Half-Carry: {}".format(int(self.flags().get_acarry()))
 
-        #print len(self.memory()._memory[0x2400:0x3fff])
+        #raw_input()
+
+    def draw_screen(self):
+        def bits(i):
+            b = []
+            for x in str(bin(i))[2:].zfill(8):
+                b.append(int(x))
+            return b
+
+        video = []
+
+        for x in self.memory()._memory[0x2400:0x4000]:
+            video += bits(x)
+
+        counter = 0
+        for i in range(self.width):
+            for j in range(self.height):
+                if video[counter]:
+                    self.screen.set_at((i, j), (255, 255, 255))
+                counter += 1
+
+        pygame.display.flip()

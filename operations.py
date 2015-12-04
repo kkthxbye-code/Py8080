@@ -146,11 +146,9 @@ def mov_from_addr(state):
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
     dst = (opcode >> 3) & 0x7
-    print dst
     src = 2
 
     address = state.registers().get_register_word(src)
-    print address
     value = state.memory().read_byte(address)
 
     state.registers().set_register_byte(dst, value)
@@ -276,3 +274,37 @@ def rp(state):
     """
     if state.flags().get_parity():
         ret(state)
+
+def rrc(state):
+    """
+    :type state: State
+    """
+
+    h = (state.registers().get_register_byte(7) & 1) << 7
+    if h:
+        state.flags().set_carry_raw(True)
+    else:
+        state.flags().set_carry_raw(False)
+
+    state.registers().set_register_byte(7, state.registers().get_register_byte(7) & 0xFE >> 1 | h)
+
+def ani(state):
+    """
+    :type state: State
+    """
+    #NEEDS FLAGS
+    value = state.memory().read_byte(state.registers().ip() - 1)
+    res = state.registers().get_register_byte(7) & value
+
+    state.registers().set_register_byte(7, res)
+
+def rst(state):
+    #TODO: This is wrong, fix it
+    """
+    :type state: State
+    """
+    opcode = state.memory().read_byte(state.registers().ip() - 2)
+    address = ((opcode >> 3) & 0x7) << 3
+
+    state.stack().push(state.registers().ip())
+    state.registers().move_ip(address)
