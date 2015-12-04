@@ -2,4 +2,4 @@
 
 Basic rendering, first output:
 
-![Rendering](http://imgur.com/mOwQLpD)
+[Rendering](http://imgur.com/mOwQLpD)
