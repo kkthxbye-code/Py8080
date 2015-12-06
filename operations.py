@@ -292,11 +292,43 @@ def ani(state):
     """
     :type state: State
     """
-    #NEEDS FLAGS
     value = state.memory().read_byte(state.registers().ip() - 1)
-    res = state.registers().get_register_byte(7) & value
+    orig = state.registers().get_register_byte(7)
+    res = orig & value
+
+
+    underflow = orig > res
+
+    state.flags().set_sign(underflow)
+
+    state.flags().set_zero(res)
+    state.flags().set_carry(res)
+    state.flags().set_acarry(orig, res)
+    state.flags().set_parity(res)
 
     state.registers().set_register_byte(7, res)
+
+
+def adi(state):
+    """
+    :type state: State
+    """
+    value = state.memory().read_byte(state.registers().ip() - 1)
+    orig = state.registers().get_register_byte(7)
+    res = orig + value
+
+
+    underflow = orig > res
+
+    state.flags().set_sign(underflow)
+
+    state.flags().set_zero(res)
+    state.flags().set_carry(res)
+    state.flags().set_acarry(orig, res)
+    state.flags().set_parity(res)
+
+    state.registers().set_register_byte(7, res)
+
 
 def rst(state):
     #TODO: This is wrong, fix it
@@ -304,7 +336,10 @@ def rst(state):
     :type state: State
     """
     opcode = state.memory().read_byte(state.registers().ip() - 2)
+    print "Opcode {}".format(opcode)
     address = ((opcode >> 3) & 0x7) << 3
+    print "Opcode {}".format(address)
+
 
     state.stack().push(state.registers().ip())
     state.registers().move_ip(address)
