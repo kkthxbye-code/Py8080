@@ -23,7 +23,6 @@ class i8080(object):
         except NotImplementedError as e:
             print "n: {}".format(self.c)
             self._state.dump_state()
-            raw_input()
             raise NotImplementedError(e)
 
     def run(self):

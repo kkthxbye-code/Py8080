@@ -54,7 +54,10 @@ class State(object):
         print "Carry: {}".format(int(self.flags().get_carry()))
         print "Half-Carry: {}".format(int(self.flags().get_acarry()))
 
-        #raw_input()
+        for idx, x in enumerate(self.memory()._memory[0x2400:0x4000]):
+            if x:
+                print "{}: {}".format(idx, x)
+
 
     def draw_screen(self):
         def bits(i):
