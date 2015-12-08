@@ -53,7 +53,11 @@ class Instruction(object):
             0xe6: {"length": 2, "operation": ani},
             0xc6: {"length": 2, "operation": adi},
             0xf1: {"length": 1, "operation": pop_psw},
-            0x32: {"length": 3, "operation": sta_m}
+            0x32: {"length": 3, "operation": sta_m},
+            0xaf: {"length": 1, "operation": xra},
+            0xfb: {"length": 1, "operation": fb},
+            0xa7: {"length": 1, "operation": ana},
+
            # 0xc6: {"length": 1, "operation": rst}
             # 0xf0: {"length": 1, "operation": rp},
 

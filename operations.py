@@ -371,3 +371,60 @@ def sta_m(state):
     value = state.registers().get_register_byte(7)
 
     state.memory().write_byte(address, value)
+
+
+def xra(state):
+    """
+    :type state: State
+    """
+    opcode = state.memory().read_byte(state.registers().ip() - 1)
+
+    dst = 7 #A
+    src = opcode & 0x7
+
+    orig = state.registers().get_register_byte(dst)
+    res = orig ^ src
+
+    underflow = orig > res
+
+    state.flags().set_sign(underflow)
+
+    state.flags().set_zero(res)
+    state.flags().set_carry(res)
+    state.flags().set_acarry(orig, res)
+    state.flags().set_parity(res)
+
+    state.registers().set_register_byte(dst, res)
+
+
+def ana(state):
+    """
+    :type state: State
+    """
+    opcode = state.memory().read_byte(state.registers().ip() - 1)
+
+    dst = 7 #A
+    src = opcode & 0x7
+
+    orig = state.registers().get_register_byte(dst)
+    res = orig & src
+
+    underflow = orig > res
+
+    state.flags().set_sign(underflow)
+
+    state.flags().set_zero(res)
+    state.flags().set_carry(res)
+    state.flags().set_acarry(orig, res)
+    state.flags().set_parity(res)
+
+    state.registers().set_register_byte(dst, res)
+
+
+
+def fb(state):
+    """
+    :type state: State
+    """
+    #TODO: ENABLE INTERRUPTS
+    pass

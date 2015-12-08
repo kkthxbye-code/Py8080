@@ -54,6 +54,7 @@ class State(object):
         print "Carry: {}".format(int(self.flags().get_carry()))
         print "Half-Carry: {}".format(int(self.flags().get_acarry()))
 
+        #raw_input()
 
     def draw_screen(self):
         video = []
