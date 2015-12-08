@@ -11,7 +11,9 @@ class State(object):
         self._stack = stack
         self._registers = registers
         self._flags = flags
+
         self.IE = False
+        self.cycle_count = 0
 
         self.width = 224
         self.height = 256

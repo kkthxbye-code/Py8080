@@ -135,6 +135,8 @@ def mov(state):
     """
     :type state: State
     """
+    state.cycle_count += 5
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
     dst = (opcode >> 3) & 0x7
     src = opcode & 0x7
@@ -146,6 +148,7 @@ def mov_to_addr(state):
     """
     :type state: State
     """
+    state.cycle_count += 7
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
     dst = 2
@@ -161,6 +164,7 @@ def mov_from_addr(state):
     """
     :type state: State
     """
+    state.cycle_count += 5
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
     dst = (opcode >> 3) & 0x7
@@ -176,6 +180,8 @@ def inx_w(state):
     """
     :type state: State
     """
+    state.cycle_count += 5
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
     dst = (opcode >> 4) & 0x3
@@ -188,10 +194,11 @@ def inx_w(state):
 
 
 def dcr(state):
-    # TODO: FLAGS
     """
     :type state: State
     """
+    state.cycle_count += 5
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
     dst = (opcode >> 3) & 0x07
 
@@ -219,6 +226,8 @@ def jnz(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     if not state.flags().get_zero():
         address = state.memory().read_word(state.registers().ip() - 2)
         state.registers().move_ip(address)
