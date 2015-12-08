@@ -54,26 +54,20 @@ class State(object):
         print "Carry: {}".format(int(self.flags().get_carry()))
         print "Half-Carry: {}".format(int(self.flags().get_acarry()))
 
-        for idx, x in enumerate(self.memory()._memory[0x2400:0x4000]):
-            if x:
-                print "{}: {}".format(idx, x)
-
 
     def draw_screen(self):
-        def bits(i):
-            b = []
-            for x in str(bin(i))[2:].zfill(8):
-                b.append(int(x))
-            return b
-
         video = []
 
         for x in self.memory()._memory[0x2400:0x4000]:
-            video += bits(x)
+            for y in range(0, 8):
+                if x & (1 << y):
+                    video.append(1)
+                else:
+                    video.append(0)
 
         counter = 0
         for i in range(self.width):
-            for j in range(self.height):
+            for j in reversed(range(self.height)):
                 if video[counter]:
                     self.screen.set_at((i, j), (255, 255, 255))
                 counter += 1

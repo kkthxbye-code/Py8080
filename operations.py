@@ -87,6 +87,24 @@ def push_psw(state):
     state.stack().push(value)
 
 
+def pop_psw(state):
+    """
+    :type state: State
+    """
+    value = state.stack().pop()
+
+    state.registers().set_register_byte(7, value & 0x00ff)
+    state.flags().set_flag((value & 0xff00) >> 8)
+
+
+def lda(state):
+    """
+    :type state: State
+    """
+    address = state.memory().read_word(state.registers().ip() - 2)
+    value = state.memory().read_byte(address)
+    state.registers().set_register_byte(7, value)
+
 
 def pop(state):
     """
@@ -343,3 +361,13 @@ def rst(state):
 
     state.stack().push(state.registers().ip())
     state.registers().move_ip(address)
+
+
+def sta_m(state):
+    """
+    :type state: State
+    """
+    address = state.memory().read_word(state.registers().ip() - 2)
+    value = state.registers().get_register_byte(7)
+
+    state.memory().write_byte(address, value)

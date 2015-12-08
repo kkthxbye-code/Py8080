@@ -14,8 +14,10 @@ class Instruction(object):
             0x11: {"length": 3, "operation": lxi_w},
             0x13: {"length": 1, "operation": inx_w},
             0x16: {"length": 2, "operation": mvi},
+            0x3e: {"length": 2, "operation": mvi},
             0x19: {"length": 1, "operation": dad},
             0x1A: {"length": 1, "operation": ldax},
+            0x3a: {"length": 3, "operation": lda},
             0x1e: {"length": 2, "operation": mvi},
             0x21: {"length": 3, "operation": lxi_w},
             0x23: {"length": 1, "operation": inx_w},
@@ -32,6 +34,7 @@ class Instruction(object):
             0x7a: {"length": 1, "operation": mov},
             0x7c: {"length": 1, "operation": mov},
             0x7e: {"length": 1, "operation": mov_from_addr},
+            0x7b: {"length": 1, "operation": mov_from_addr},
             0xc1: {"length": 1, "operation": pop},
             0xc2: {"length": 3, "operation": jnz},
             0xC3: {"length": 3, "operation": jmp},
@@ -48,7 +51,9 @@ class Instruction(object):
             0xf5: {"length": 1, "operation": push_psw},
             0x0f: {"length": 1, "operation": rrc},
             0xe6: {"length": 2, "operation": ani},
-            0xc6: {"length": 2, "operation": adi}
+            0xc6: {"length": 2, "operation": adi},
+            0xf1: {"length": 1, "operation": pop_psw},
+            0x32: {"length": 3, "operation": sta_m}
            # 0xc6: {"length": 1, "operation": rst}
             # 0xf0: {"length": 1, "operation": rp},
 
