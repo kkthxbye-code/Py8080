@@ -31,12 +31,13 @@ class Flags(object):
             self._flags &= ~self.FLAG_ACARRY
 
     def set_parity(self, value):
-        parity = not sum([value & (1<<i) > 0 for i in range(8)]) % 2
+        #parity = not sum([value & (1<<i) > 0 for i in range(8)]) % 2
+        parity = value % 2
 
         if parity:
-            self._flags |= self.FLAG_PARITY
-        else:
             self._flags &= ~self.FLAG_PARITY
+        else:
+            self._flags |= self.FLAG_PARITY
 
     def set_carry(self, res, is_word=False):
         if is_word:

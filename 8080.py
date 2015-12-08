@@ -23,6 +23,8 @@ class i8080(object):
         except NotImplementedError as e:
             print "n: {}".format(self.c)
             self._state.dump_state()
+            self.state().draw_screen()
+            raw_input()
             raise NotImplementedError(e)
 
     def run(self):
@@ -31,8 +33,13 @@ class i8080(object):
             self.c += 1
             self.next_instruction()
 
-            if self.c % 2000 == 0:
-                self.state().draw_screen()
+            if self.c > 42044:
+                print hex(self.state().registers().get_register_byte(7))
+                #print hex(self.state().registers().ip())
+            #    self.state().dump_state()
+            #    raw_input()
+            #if self.c % 2000 == 0:
+            #    self.state().draw_screen()
 
 
 machine = i8080()

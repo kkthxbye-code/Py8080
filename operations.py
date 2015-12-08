@@ -354,10 +354,7 @@ def rst(state):
     :type state: State
     """
     opcode = state.memory().read_byte(state.registers().ip() - 2)
-    print "Opcode {}".format(opcode)
     address = ((opcode >> 3) & 0x7) << 3
-    print "Opcode {}".format(address)
-
 
     state.stack().push(state.registers().ip())
     state.registers().move_ip(address)
@@ -382,10 +379,13 @@ def xra(state):
     dst = 7 #A
     src = opcode & 0x7
 
-    orig = state.registers().get_register_byte(dst)
-    res = orig ^ src
+    reg1 = state.registers().get_register_byte(dst)
+    reg2 = state.registers().get_register_byte(src)
 
-    underflow = orig > res
+    orig = reg1
+    res = reg1 ^ reg2
+
+    underflow = False
 
     state.flags().set_sign(underflow)
 
@@ -406,10 +406,13 @@ def ana(state):
     dst = 7 #A
     src = opcode & 0x7
 
-    orig = state.registers().get_register_byte(dst)
-    res = orig & src
+    reg1 = state.registers().get_register_byte(dst)
+    reg2 = state.registers().get_register_byte(src)
+    orig = reg1
 
-    underflow = orig > res
+    res = reg1 & reg2
+
+    underflow = False
 
     state.flags().set_sign(underflow)
 
