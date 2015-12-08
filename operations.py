@@ -424,10 +424,17 @@ def ana(state):
     state.registers().set_register_byte(dst, res)
 
 
-
-def fb(state):
+def ei(state):
     """
     :type state: State
     """
-    #TODO: ENABLE INTERRUPTS
-    pass
+    state.IE = True
+
+
+def di(state):
+    """
+    :type state: State
+    """
+    state.IE = False
+
+

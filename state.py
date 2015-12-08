@@ -11,6 +11,7 @@ class State(object):
         self._stack = stack
         self._registers = registers
         self._flags = flags
+        self.IE = False
 
         self.width = 224
         self.height = 256
@@ -30,6 +31,11 @@ class State(object):
 
     def flags(self):
         return self._flags
+
+    def cause_interrupt(self, address):
+        if self.IE:
+            self.stack().push(self.registers().ip())
+            self.registers().move_ip(address)
 
     def dump_state(self):
         #TODO: Make this prettier/better

@@ -55,7 +55,8 @@ class Instruction(object):
             0xf1: {"length": 1, "operation": pop_psw},
             0x32: {"length": 3, "operation": sta_m},
             0xaf: {"length": 1, "operation": xra},
-            0xfb: {"length": 1, "operation": fb},
+            0xfb: {"length": 1, "operation": ei},
+            0xf3: {"length": 1, "operation": di}
             0xa7: {"length": 1, "operation": ana},
 
            # 0xc6: {"length": 1, "operation": rst}
