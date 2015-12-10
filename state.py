@@ -3,7 +3,6 @@ from stack import Stack
 from registers import Registers
 from flags import Flags
 import pygame
-import random
 
 class State(object):
     def __init__(self, memory=Memory(32*1024), stack=Stack(32*1024), registers=Registers(), flags=Flags()):
@@ -13,6 +12,7 @@ class State(object):
         self._flags = flags
 
         self.IE = False
+        self.last_interrupt = 0x10
         self.cycle_count = 0
 
         self.width = 224
@@ -34,10 +34,14 @@ class State(object):
     def flags(self):
         return self._flags
 
-    def cause_interrupt(self, address):
-        if self.IE:
-            self.stack().push(self.registers().ip())
-            self.registers().move_ip(address)
+    def cause_interrupt(self):
+        if self.last_interrupt == 0x10:
+            address = 0x08
+        else:
+            address = 0x10
+
+        self.stack().push(self.registers().ip())
+        self.registers().move_ip(address)
 
     def dump_state(self):
         #TODO: Make this prettier/better

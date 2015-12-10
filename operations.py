@@ -2,6 +2,7 @@ from state import State
 
 
 def nop(state):
+    state.cycle_count += 4
     pass
 
 
@@ -9,6 +10,8 @@ def jmp(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     address = state.memory().read_word(state.registers().ip() - 2)
 
     state.registers().move_ip(address)
@@ -18,6 +21,8 @@ def mvi(state):
     """
     :type state: State
     """
+    state.cycle_count += 7
+
     opcode = state.memory().read_byte(state.registers().ip() - 2)
     dst = (opcode >> 3) & 0x07
 
@@ -28,6 +33,8 @@ def mvi_m(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     dst = 2
     address = state.registers().get_register_word(dst)
 
@@ -40,6 +47,8 @@ def lxi(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     address = state.memory().read_word(state.registers().ip() - 2)
 
     state.stack().set_position(address)
@@ -49,6 +58,8 @@ def lxi_w(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     opcode = state.memory().read_byte(state.registers().ip() - 3)
     dst = (opcode >> 4) & 0x3
 
@@ -60,6 +71,8 @@ def call(state):
     """
     :type state: State
     """
+    state.cycle_count += 17
+
     address = state.memory().read_word(state.registers().ip() - 2)
     state.stack().push(state.registers().ip())
     state.registers().move_ip(address)
@@ -69,6 +82,8 @@ def push(state):
     """
     :type state: State
     """
+    state.cycle_count += 11
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
     src = (opcode >> 4) & 3
 
@@ -80,6 +95,8 @@ def push_psw(state):
     """
     :type state: State
     """
+    state.cycle_count += 11
+
     lower = state.registers().get_register_byte(7) #A
     upper = state.flags().flags() #F
     value = (upper << 8) | lower
@@ -91,6 +108,8 @@ def pop_psw(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     value = state.stack().pop()
 
     state.registers().set_register_byte(7, value & 0x00ff)
@@ -101,6 +120,8 @@ def lda(state):
     """
     :type state: State
     """
+    state.cycle_count += 13
+
     address = state.memory().read_word(state.registers().ip() - 2)
     value = state.memory().read_byte(address)
     state.registers().set_register_byte(7, value)
@@ -110,6 +131,8 @@ def pop(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
     dst = (opcode >> 4) & 3
 
@@ -121,6 +144,8 @@ def ldax(state):
     """
     :type state: State
     """
+    state.cycle_count += 7
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
     dst = 7
     src = (opcode >> 4) & 0x3
@@ -129,6 +154,13 @@ def ldax(state):
     data = state.memory().read_byte(address)
 
     state.registers().set_register(dst, data)
+
+def stc(state):
+    """
+    :type state: State
+    """
+    state.cycle_count += 4
+    state.flags().set_carry_raw(True)
 
 
 def mov(state):
@@ -164,7 +196,7 @@ def mov_from_addr(state):
     """
     :type state: State
     """
-    state.cycle_count += 5
+    state.cycle_count += 7
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
     dst = (opcode >> 3) & 0x7
@@ -205,7 +237,7 @@ def dcr(state):
     value = state.registers().get_register_byte(dst)
 
     temp = value - 1
-    state.flags().set_acarry(value, temp) #TODO: This is broken
+    state.flags().set_acarry(value, temp) #TODO: This might be broken
 
     temp = (temp & 0xff)
 
@@ -220,6 +252,34 @@ def dcr(state):
     state.flags().set_carry(value & 0x100)
 
     state.registers().set_register_byte(dst, value)
+
+
+def dcr_m(state):
+    #TODO: Not sure this is right, early code, needs a rewrite.
+    """
+    :type state: State
+    """
+    state.cycle_count += 10
+
+    address = state.registers().get_register_word(2)
+    orig = state.memory().read_byte(address)
+    res = orig - 1
+
+    state.flags().set_acarry(orig, res) #TODO: This might be broken
+
+    temp = (res & 0xff)
+
+    underflow = temp > orig
+
+    state.flags().set_sign(underflow)
+
+    value = temp
+
+    state.flags().set_parity(value)
+    state.flags().set_zero(value)
+    state.flags().set_carry(value & 0x100)
+
+    state.memory().write_byte(address, value)
 
 
 def jnz(state):
@@ -237,6 +297,8 @@ def ret(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     address = state.stack().pop()
     state.registers().move_ip(address)
 
@@ -245,6 +307,8 @@ def cpi(state):
     """
     :type state: State
     """
+    state.cycle_count += 7
+
     value = state.memory().read_byte(state.registers().ip() - 1)
     dst = state.registers().get_register_by_name("a")
     dst_value = state.registers().get_register_byte(dst)
@@ -265,6 +329,8 @@ def dad(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
     reg = (opcode >> 4) & 0x3
 
@@ -282,6 +348,8 @@ def xchg(state):
     """
     :type state: State
     """
+    state.cycle_count += 5
+
     de = state.registers().get_register_word(1)
     hl = state.registers().get_register_word(2)
 
@@ -292,15 +360,74 @@ def out(state):
     """
     :type state: State
     """
+    state.cycle_count += 10
+
     #TODO: Figure out what is needed regardning audio and shift registers
     value = state.memory().read_byte(state.registers().ip() - 1)
+
+
+def inp(state):
+    #TODO: Implent input
+    """
+    :type state: State
+    """
+    state.cycle_count += 10
+
 
 def rp(state):
     """
     :type state: State
     """
     if state.flags().get_parity():
+        state.cycle_count += 1 #11 with ret
         ret(state)
+    else:
+        state.cycle_count += 5
+
+
+def rz(state):
+    """
+    :type state: State
+    """
+    if state.flags().get_zero():
+        state.cycle_count += 1 #11 with ret
+        ret(state)
+    else:
+        state.cycle_count += 5
+
+
+def jc(state):
+    """
+    :type state: State
+    """
+    state.cycle_count += 10
+
+    if state.flags().get_carry():
+        address = state.memory().read_word(state.registers().ip() - 2)
+        state.registers().move_ip(address)
+
+
+def jz(state):
+    """
+    :type state: State
+    """
+    state.cycle_count += 10
+
+    if state.flags().get_zero():
+        address = state.memory().read_word(state.registers().ip() - 2)
+        state.registers().move_ip(address)
+
+
+def jnc(state):
+    """
+    :type state: State
+    """
+    state.cycle_count += 10
+
+    if not state.flags().get_carry():
+        address = state.memory().read_word(state.registers().ip() - 2)
+        state.registers().move_ip(address)
+
 
 def rrc(state):
     """
@@ -319,10 +446,11 @@ def ani(state):
     """
     :type state: State
     """
+    state.cycle_count += 4
+
     value = state.memory().read_byte(state.registers().ip() - 1)
     orig = state.registers().get_register_byte(7)
     res = orig & value
-
 
     underflow = orig > res
 
@@ -340,10 +468,11 @@ def adi(state):
     """
     :type state: State
     """
+    state.cycle_count += 7
+
     value = state.memory().read_byte(state.registers().ip() - 1)
     orig = state.registers().get_register_byte(7)
     res = orig + value
-
 
     underflow = orig > res
 
@@ -362,6 +491,8 @@ def rst(state):
     """
     :type state: State
     """
+    state.cycle_count += 11
+
     opcode = state.memory().read_byte(state.registers().ip() - 2)
     address = ((opcode >> 3) & 0x7) << 3
 
@@ -373,6 +504,8 @@ def sta_m(state):
     """
     :type state: State
     """
+    state.cycle_count += 13
+
     address = state.memory().read_word(state.registers().ip() - 2)
     value = state.registers().get_register_byte(7)
 
@@ -383,6 +516,8 @@ def xra(state):
     """
     :type state: State
     """
+    state.cycle_count += 4
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
     dst = 7 #A
@@ -410,6 +545,8 @@ def ana(state):
     """
     :type state: State
     """
+    state.cycle_count += 4
+
     opcode = state.memory().read_byte(state.registers().ip() - 1)
 
     dst = 7 #A
@@ -437,6 +574,8 @@ def ei(state):
     """
     :type state: State
     """
+    state.cycle_count += 11
+
     state.IE = True
 
 
@@ -444,6 +583,8 @@ def di(state):
     """
     :type state: State
     """
+    state.cycle_count += 11
+
     state.IE = False
 
 

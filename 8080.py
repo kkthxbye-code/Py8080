@@ -1,5 +1,5 @@
 from state import State
-from instructions import Instruction
+from instructions import instructions
 
 class i8080(object):
     def __init__(self):
@@ -17,30 +17,48 @@ class i8080(object):
         opcode = self._state.memory().read_byte(self._state.registers().ip())
 
         try:
-            instruction = Instruction(opcode)
-            self._state.registers().increment_ip(instruction.length)
-            instruction.operation(self._state)
+            try:
+                instruction = instructions[opcode]
+            except:
+                raise NotImplementedError("Instruction {} not implemented".format(hex(opcode)))
+
+            self._state.registers().increment_ip(instruction["length"])
+            instruction['operation'](self._state)
+            return True
         except NotImplementedError as e:
             print "n: {}".format(self.c)
             self._state.dump_state()
-            self.state().draw_screen()
             raw_input()
             raise NotImplementedError(e)
+            return False
 
     def run(self):
         self.c = 0
         while True:
+            #raw_input()
+            self.process_interrupt()
             self.c += 1
-            self.next_instruction()
 
-            if self.c > 42044:
-                print hex(self.state().registers().get_register_byte(7))
-                #print hex(self.state().registers().ip())
-            #    self.state().dump_state()
-            #    raw_input()
-            #if self.c % 2000 == 0:
-            #    self.state().draw_screen()
+            if not self.next_instruction():
+                break
 
+            if self.c == 1001:
+                print self.state().cycle_count
+                raw_input()
+
+
+    def process_interrupt(self):
+        if self.state().cycle_count > 16667:
+            self.state().cycle_count -= 16667
+
+            if self.state().last_interrupt == 0x10:
+                self.state().last_interrupt = 0x08
+                self.state().draw_screen()
+            else:
+                self.state().last_interrupt = 0x10
+
+            if self.state().IE:
+                self.state().cause_interrupt()
 
 machine = i8080()
 machine.load("invaders")
