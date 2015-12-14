@@ -18,9 +18,10 @@ class State(object):
         self.width = 224
         self.height = 256
 
-        pygame.init()
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        self.clock = pygame.time.Clock()
+        if False:
+            pygame.init()
+            self.screen = pygame.display.set_mode((self.width, self.height))
+            self.clock = pygame.time.Clock()
 
     def memory(self):
         return self._memory

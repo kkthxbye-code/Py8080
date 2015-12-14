@@ -24,5 +24,8 @@ class Memory(object):
         for idx, byte in enumerate(bytes):
             self.write_byte(position+idx, byte)
 
+    def get_memory(self):
+        return self._memory
+
     def __repr__(self):
         return str(self._memory)

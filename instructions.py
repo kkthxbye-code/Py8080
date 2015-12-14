@@ -38,7 +38,7 @@ instructions = {
     0x7b: {"length": 1, "operation": mov_from_addr},
     0xc1: {"length": 1, "operation": pop},
     0xc2: {"length": 3, "operation": jnz},
-    0xC3: {"length": 3, "operation": jmp},
+    0xc3: {"length": 3, "operation": jmp},
     0xc5: {"length": 1, "operation": push},
     0xc9: {"length": 1, "operation": ret},
     0xcd: {"length": 3, "operation": call},

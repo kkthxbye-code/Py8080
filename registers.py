@@ -13,9 +13,6 @@ class Registers(object):
             "a"
         ]
 
-    def sp(self):
-        return self.get_register_byte(4)
-
     def ip(self):
         return self._ip
 
@@ -51,6 +48,13 @@ class Registers(object):
             return self._register_names.index(name.lower())
         except ValueError:
             raise ValueError("Trying to look-up non-existant register")
+
+    def get_register_byte_by_name(self, name):
+        try:
+            return self.get_register_byte(self._register_names.index(name.lower()))
+        except ValueError:
+            raise ValueError("Trying to look-up non-existant register")
+
 
     def get_register(self, index, is_word=False):
         if is_word:
